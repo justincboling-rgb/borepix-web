@@ -26,9 +26,13 @@ img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-sr
 object-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';
 upgrade-insecure-requests`. Development adds `'unsafe-eval'` and `ws: wss:` for hot reloading only.
 
-- Nothing third-party is loaded: fonts come from `next/font` (self-hosted), there are no analytics,
-  tag managers or embeds. **Adding any external script, style, font, image host or API means
-  extending the CSP first**, in `next.config.ts`, and documenting why here.
+- The only third-party code is Vercel Web Analytics (`@vercel/analytics`, `<Analytics />` in
+  `src/app/layout.tsx`). In production it loads `/_vercel/insights/script.js` and posts page views and events to
+  `/_vercel/insights/*`, all same-origin, so the production CSP is unchanged; it sets no cookies.
+  In development the debug build comes from `https://va.vercel-scripts.com`, which is allowed in
+  `script-src` only when `NODE_ENV` is not `production`. Fonts come from `next/font` (self-hosted);
+  there are no tag managers or embeds. **Adding any other external script, style, font, image host or
+  API means extending the CSP first**, in `next.config.ts`, and documenting why here.
 - `'unsafe-inline'` for scripts is required by Next.js hydration without a nonce strategy. Moving to
   nonces (`proxy.ts` generating a per-request nonce and `script-src 'nonce-…' 'strict-dynamic'`) is the
   next hardening step once the backend ships.

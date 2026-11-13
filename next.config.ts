@@ -3,15 +3,17 @@ import type { NextConfig } from "next";
 const isDev = process.env.NODE_ENV !== "production";
 
 /**
- * Baseline Content Security Policy for a Next.js App Router site with no third-party scripts.
+ * Baseline Content Security Policy for a Next.js App Router site whose only third-party code is Vercel Web Analytics.
  * - Scripts and styles are self-hosted; Next's hydration and Tailwind need inline allowances, and the
  *   development server also needs eval and a WebSocket for hot reloading.
  * - Fonts are self-hosted through next/font; images and the Three.js canvas use data: and blob: URLs.
+ * - Vercel Web Analytics is same-origin in production (/_vercel/insights/script.js and /_vercel/insights/*);
+ *   only its development debug build loads from va.vercel-scripts.com, so that host is allowed in development alone.
  * - Nothing may frame the site, and forms may only post back to it.
  */
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval' https://va.vercel-scripts.com" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self' data:",

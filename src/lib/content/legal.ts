@@ -311,7 +311,7 @@ const privacy: LegalDoc = {
     "What Borepix collects, where it is stored, how the site is secured on Vercel, which cookies are used, and the choices you have. The current preview keeps your study data in your browser, not on our servers.",
   summary: [
     "The current preview has no hosted accounts. Your study progress is saved in your browser's local storage on your device, and it is not sent to Borepix.",
-    "We never sell your personal information, and we never will. We do not use advertising cookies, tracking pixels or third-party analytics.",
+    "We never sell your personal information, and we never will. We do not use advertising cookies or tracking pixels; page views are counted with Vercel Web Analytics, which sets no cookies and does not follow you across sites.",
     "The site is served over HTTPS from Vercel's secure infrastructure with strict transport security and content-security headers.",
     "Never enter patient information in Borepix. It is a study tool, not a clinical system.",
     "When hosted accounts launch, we will update this policy before we collect anything new.",
@@ -372,7 +372,7 @@ const privacy: LegalDoc = {
       heading: "Cookies, analytics and third parties",
       blocks: [
         p(
-          "Borepix does not use advertising cookies, tracking pixels or third-party analytics, and we do not sell or share data for advertising. Fonts, images and video are served from the Borepix site itself, so loading a page does not send your information to font or video providers.",
+          "Borepix does not use advertising cookies or tracking pixels, and we do not sell or share data for advertising. Page views are measured with Vercel Web Analytics, which runs on the same Vercel infrastructure that hosts the site: it sets no cookies, does not track you across sites, and counts visits with a short-lived hash rather than a persistent identifier. Fonts, images and video are served from the Borepix site itself, so loading a page does not send your information to font or video providers.",
         ),
         p("The only browser storage and cookies the site sets are strictly necessary ones:"),
         list(
@@ -381,7 +381,7 @@ const privacy: LegalDoc = {
           "One HTTP-only, secure cookie named `borepix_admin`, set only on the founder dashboard for the Borepix team and never for visitors. It carries no personal data and cannot be read by scripts.",
         ),
         p(
-          "Because none of these are used for tracking, no cookie banner is shown. If we add analytics or other cookies later, we will update this policy first and ask for your consent where the law requires it.",
+          "Because none of these are used for tracking, no cookie banner is shown. If we add other cookies or tracking later, we will update this policy first and ask for your consent where the law requires it.",
         ),
       ],
     },
