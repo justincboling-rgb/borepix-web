@@ -11,10 +11,10 @@
  */
 
 import { getProduct } from "@/data/products";
-import { educationalNotice, legalPages, site, trademarkNotice, type LegalSlug } from "@/lib/site";
+import { educationalNotice, legalEmail, legalEntity, legalPages, site, trademarkNotice, type LegalSlug } from "@/lib/site";
 
-export const LEGAL_LAST_UPDATED = "November 6, 2026";
-export const LEGAL_LAST_UPDATED_ISO = "2026-11-06";
+export const LEGAL_LAST_UPDATED = "November 13, 2026";
+export const LEGAL_LAST_UPDATED_ISO = "2026-11-13";
 
 export type LegalBlock =
   | { kind: "p"; text: string }
@@ -66,6 +66,7 @@ const terms: LegalDoc = {
     "Workbooks and self-quizzes are free. Test keys, suites, CE Library passes and app licenses are sold in the store and delivered as license keys.",
     `Test keys and app licenses are one-time purchases. The ${cePass.name} renews at ${cePassPrice} per year until you cancel. You can cancel anytime.`,
     "Use Borepix for your own study. Do not share your account or keys, copy the question banks, or post real exam content.",
+    `Everything on the Service belongs to ${legalEntity}. Disputes are resolved by binding individual arbitration, and class actions are waived; you can opt out of arbitration within 30 days of first accepting these Terms.`,
   ],
   sections: [
     {
@@ -73,7 +74,7 @@ const terms: LegalDoc = {
       heading: "Agreement to these terms",
       blocks: [
         p(
-          `These Terms of Service ("Terms") are an agreement between you and Borepix ("Borepix", "we", "us"). They cover the website at ${siteHost}, the Borepix web app, the Borepix mobile app once it is released, and related emails and support (together, the "Service").`,
+          `These Terms of Service ("Terms") are an agreement between you and ${legalEntity} ("Borepix", "we", "us"). They cover the website at ${siteHost}, the Borepix web app, the Borepix mobile app once it is released, and related emails and support (together, the "Service").`,
         ),
         p("By using the Service, you agree to these Terms. If you do not agree, do not use the Service."),
         p(
@@ -157,13 +158,24 @@ const terms: LegalDoc = {
     },
     {
       id: "content",
-      heading: "Our content and your license",
+      heading: "Intellectual property and your license",
       blocks: [
         p(
-          "Borepix writes its own practice questions, rationales, flashcards, lessons and interactive labs. That content, and the software and design of the Service, belong to Borepix and are protected by copyright and other laws.",
+          `Borepix writes its own workbooks, practice questions, rationales, flashcards, lessons, diagrams and interactive labs. That content, the question and test-key banks, the Borepix name and logo, and the software and design of the Service are the property of ${legalEntity} and are protected by United States and international copyright, trademark and other intellectual-property laws. Copyright © ${site.copyrightYear} ${legalEntity}. All rights reserved.`,
         ),
         p(
-          "While you follow these Terms, we give you a personal, non-exclusive, non-transferable license to use the Service and its content for your own exam preparation. The license ends when your access ends. Instructors and programs that want to use Borepix with a class should contact us first.",
+          "While you follow these Terms, we give you a limited, personal, non-exclusive, non-transferable, revocable license to access the Service and use its content for your own study and continuing education. The license ends when your access ends or when these Terms are terminated. Instructors and programs that want to use Borepix with a class should contact us first.",
+        ),
+        p("Under this license you may not:"),
+        list(
+          "Copy, download, scrape, record, screenshot in bulk, or otherwise reproduce question banks, test-key assessments, rationales, workbooks or diagrams, in whole or in part.",
+          "Sell, rent, sublicense, share, publish or distribute Service content, license keys or account access, including on study-sharing or question-dump sites.",
+          "Modify, translate, reverse engineer, decompile or create derivative works from the Service or its content, or remove copyright and trademark notices.",
+          "Use automated tools, bots, crawlers or AI training pipelines to access, extract or train on Service content without our written permission.",
+          "Use the Service to build a competing product or to assist anyone else in doing so.",
+        ),
+        p(
+          `All rights not expressly granted in these Terms are reserved by ${legalEntity}. Copyright complaints are handled under the DMCA Copyright Notice.`,
         ),
         p("If you send us feedback or report an error, we may use it to improve the Service without owing you anything for it."),
       ],
@@ -237,14 +249,44 @@ const terms: LegalDoc = {
       ],
     },
     {
-      id: "disputes",
-      heading: "Governing law and disputes",
+      id: "arbitration",
+      heading: "Binding arbitration and class-action waiver",
       blocks: [
-        p(
-          `If you have a problem with Borepix, email ${email} first. Most issues can be fixed quickly. Please give us 30 days to resolve a dispute informally before you start a formal claim.`,
+        note(
+          "Please read this section carefully. It requires you and Borepix to resolve most disputes through binding individual arbitration instead of a court trial, and it waives the right to bring or join a class action. You can opt out within 30 days.",
         ),
         p(
-          "These Terms are governed by the laws of the United States and of the state in which Borepix is organized, without regard to conflict-of-law rules. Nothing in these Terms limits consumer rights that the law does not allow to be waived.",
+          `Informal resolution first. If you have a dispute with Borepix, email ${email} with your name, contact details and a description of the problem. We will do the same if we have a dispute with you. Both sides agree to try in good faith to resolve the dispute informally for 30 days before starting arbitration or any other proceeding.`,
+        ),
+        p(
+          `Agreement to arbitrate. Except for the matters listed below, any dispute, claim or controversy between you and ${legalEntity} arising out of or relating to these Terms or the Service, whether based in contract, tort, statute or any other legal theory, and including disputes about the scope or enforceability of this section, will be resolved by binding arbitration administered by the American Arbitration Association (AAA) under its Consumer Arbitration Rules, as modified by this section. The Federal Arbitration Act governs the interpretation and enforcement of this section.`,
+        ),
+        p(
+          "How arbitration works. One neutral arbitrator decides the dispute. The arbitrator can award the same individual relief a court could, must follow these Terms, and will issue a written decision. Hearings take place by video, by telephone, by written submission, or in the county where you live, at your choice. Borepix will pay the AAA filing, administrative and arbitrator fees for claims under $10,000 unless the arbitrator finds the claim frivolous. Judgment on the award may be entered in any court with jurisdiction.",
+        ),
+        p(
+          "Class-action and jury waiver. To the fullest extent the law allows, you and Borepix agree that each may bring claims against the other only in an individual capacity, and not as a plaintiff or class member in any purported class, collective, consolidated or representative proceeding. The arbitrator may not consolidate more than one person's claims or preside over any form of class or representative proceeding. You and Borepix each waive the right to a jury trial. If this class-action waiver is found unenforceable for a particular claim, that claim will proceed in court, not in arbitration, and the rest of this section still applies to every other claim.",
+        ),
+        p(
+          "Exceptions. Either side may bring an individual claim in small-claims court if it qualifies there, may seek a court order to stop unauthorized use or infringement of intellectual property, and may report a concern to a government agency. Nothing in this section waives rights that the law does not allow to be waived.",
+        ),
+        p(
+          `Thirty-day opt-out. You may reject this arbitration agreement by emailing ${email} within 30 days of the date you first accept these Terms, with the subject line "Arbitration opt-out", your name and the email address on your account. Opting out does not affect any other part of these Terms. If you opt out, disputes will be resolved in the courts described in the next section.`,
+        ),
+        p(
+          "Changes. If we change this arbitration section after you accept these Terms, you may reject the change by emailing us within 30 days of the change, in which case the version you last accepted applies to disputes that arose before the change.",
+        ),
+      ],
+    },
+    {
+      id: "disputes",
+      heading: "Governing law and venue",
+      blocks: [
+        p(
+          `These Terms are governed by the laws of the State of New Jersey and the federal laws of the United States, without regard to conflict-of-law rules. For any dispute that is not subject to arbitration, you and ${legalEntity} agree to the exclusive jurisdiction of the state and federal courts located in Hudson County, New Jersey, and waive any objection to venue there. Nothing in these Terms limits consumer rights that the law does not allow to be waived, including the right to bring claims in your home jurisdiction where the law requires it.`,
+        ),
+        p(
+          "If any part of these Terms is found unenforceable, the rest stays in effect. Our failure to enforce a provision is not a waiver of it. These Terms, together with the Privacy Policy, Refund Policy, Educational Disclaimer, Trademark Notice and DMCA Copyright Notice, are the entire agreement between you and Borepix about the Service.",
         ),
       ],
     },
@@ -266,12 +308,13 @@ const privacy: LegalDoc = {
   slug: "privacy",
   title: TITLE.privacy,
   description:
-    "What Borepix collects, where it is stored, and the choices you have. The current preview keeps your study data in your browser, not on our servers.",
+    "What Borepix collects, where it is stored, how the site is secured on Vercel, which cookies are used, and the choices you have. The current preview keeps your study data in your browser, not on our servers.",
   summary: [
-    "The current preview has no accounts. Your study progress is saved in your browser's local storage on your device, and it is not sent to Borepix.",
-    "We do not sell your personal information. We do not use advertising cookies or third-party analytics.",
+    "The current preview has no hosted accounts. Your study progress is saved in your browser's local storage on your device, and it is not sent to Borepix.",
+    "We never sell your personal information, and we never will. We do not use advertising cookies, tracking pixels or third-party analytics.",
+    "The site is served over HTTPS from Vercel's secure infrastructure with strict transport security and content-security headers.",
     "Never enter patient information in Borepix. It is a study tool, not a clinical system.",
-    "When accounts launch, we will update this policy before we collect anything new.",
+    "When hosted accounts launch, we will update this policy before we collect anything new.",
   ],
   sections: [
     {
@@ -315,7 +358,7 @@ const privacy: LegalDoc = {
           "In the preview, Borepix does not run an account server and does not receive the data stored in your browser. We receive information only in these cases:",
         ),
         list(
-          "Technical request data. Like any website, the hosting service that delivers Borepix receives standard information with each request, such as your IP address, browser type, the page requested and the time. It is used to deliver the site, keep it secure and fix errors.",
+          "Technical request data. Borepix is hosted on Vercel. Like any website, Vercel's edge network receives standard information with each request, such as your IP address, browser type, the page requested and the time, and keeps short-lived request logs. That data is used only to deliver the site, keep it secure, prevent abuse and fix errors; it is not used to build a profile of you.",
           "Store orders. When you check out, your card details go directly to our payment processor over an encrypted connection. Borepix receives the order itself: the products, the amount, your name and email address, and the card brand and last four digits, so we can deliver your keys, send your receipt and support you. Borepix never stores your full card number.",
           "Messages you send us. If you email us, we receive your email address and whatever your message contains.",
         ),
@@ -329,10 +372,16 @@ const privacy: LegalDoc = {
       heading: "Cookies, analytics and third parties",
       blocks: [
         p(
-          "The preview does not use advertising cookies, tracking pixels or third-party analytics. Fonts, images and video are served from the Borepix site itself, so loading a page does not send your information to font or video providers.",
+          "Borepix does not use advertising cookies, tracking pixels or third-party analytics, and we do not sell or share data for advertising. Fonts, images and video are served from the Borepix site itself, so loading a page does not send your information to font or video providers.",
+        ),
+        p("The only browser storage and cookies the site sets are strictly necessary ones:"),
+        list(
+          "Local storage entries (listed above) that hold your study progress, cart, orders, pledges and affiliate details on your own device.",
+          "Session storage flags that remember you dismissed the release or Rad Tech Week banner for the current browsing session.",
+          "One HTTP-only, secure cookie named `borepix_admin`, set only on the founder dashboard for the Borepix team and never for visitors. It carries no personal data and cannot be read by scripts.",
         ),
         p(
-          "If we add analytics or other cookies later, we will update this policy first and ask for your consent where the law requires it.",
+          "Because none of these are used for tracking, no cookie banner is shown. If we add analytics or other cookies later, we will update this policy first and ask for your consent where the law requires it.",
         ),
       ],
     },
@@ -417,10 +466,13 @@ const privacy: LegalDoc = {
       heading: "Security",
       blocks: [
         p(
-          "Borepix is served over HTTPS. Browser local storage is not encrypted on your device, so protect your device with a passcode and clear site data on shared computers.",
+          "Borepix is hosted on Vercel's secure infrastructure and served only over HTTPS, with HTTP Strict Transport Security, a content-security policy, frame-embedding protection and content-type and referrer controls enforced on every response. Private keys and credentials live only in server-side environment variables and are never shipped to the browser.",
         ),
         p(
-          "No system is perfectly secure. When accounts launch, we will protect account data with industry-standard safeguards and notify you of a breach as the law requires.",
+          "Browser local storage is not encrypted on your device, so protect your device with a passcode and clear site data on shared computers.",
+        ),
+        p(
+          "No system is perfectly secure. When hosted accounts launch, we will protect account data with industry-standard safeguards, keep sessions in secure HTTP-only cookies, and notify you of a breach as the law requires.",
         ),
       ],
     },
@@ -564,12 +616,12 @@ const disclaimer: LegalDoc = {
   slug: "disclaimer",
   title: TITLE.disclaimer,
   description:
-    "Borepix is an independent study aid for ARRT® registry exams. It is not affiliated with ARRT, does not use real exam items, and is not medical advice.",
+    "Borepix is an independent educational tool for Radiologic Technologists and registry exam preparation only. It is not affiliated with ARRT®, does not use real exam items, is not clinical or diagnostic advice, and does not guarantee that anyone will pass a board exam.",
   summary: [
-    "Borepix is an independent study aid. It is not affiliated with, sponsored by, or endorsed by ARRT®.",
+    "Borepix is an independent educational tool for Radiologic Technologists, built for registry exam preparation and continuing education only. It is not affiliated with, sponsored by, or endorsed by ARRT®.",
     "Every practice question is written by Borepix. None are actual exam items.",
-    "Nothing here is medical advice or a replacement for your clinical training and your facility's policies.",
-    "Borepix does not guarantee exam results and does not award continuing education credit.",
+    "Nothing here is clinical or diagnostic advice, and nothing replaces your clinical training, your supervising physician or physicist, or your facility's policies.",
+    "Borepix does not guarantee that you will pass any board or registry exam, and no pass rate is promised or implied. Continuing education credit is recorded only for a passing test-key submission.",
   ],
   sections: [
     {
@@ -612,7 +664,7 @@ const disclaimer: LegalDoc = {
       heading: "No guarantee of results",
       blocks: [
         p(
-          "Your result depends on your preparation, your program and the exam itself. Borepix does not guarantee that you will pass or reach any score. Readiness indicators and analytics are estimates based only on your answers in Borepix. They are not official scores and not predictions from ARRT.",
+          "Your result depends on your preparation, your program and the exam itself. Borepix does not guarantee that you will pass any board or registry exam or reach any score, and we do not advertise or imply a pass rate. Readiness indicators, quiz scores and analytics are estimates based only on your answers in Borepix. They are not official scores and not predictions from ARRT.",
         ),
       ],
     },
@@ -621,7 +673,7 @@ const disclaimer: LegalDoc = {
       heading: "Not medical or clinical advice",
       blocks: [
         p(
-          "Borepix teaches concepts for exam preparation. It is not medical advice and it is not a clinical protocol. In practice, follow your program's instruction, your supervising radiologist or physicist, your facility's policies and procedures, and the manufacturer's instructions for equipment and devices.",
+          "Borepix teaches concepts for exam preparation and continuing education. It is not medical, clinical or diagnostic advice, it is not a clinical protocol, and it must never be used to make or support a decision about a real patient, image or procedure. In practice, follow your program's instruction, your supervising radiologist or physicist, your facility's policies and procedures, and the manufacturer's instructions for equipment and devices.",
         ),
         note(
           "This matters most for MRI safety. Screening, zoning and implant decisions must follow your facility's MR safety program and current device labeling, such as MR Conditional status. Never use Borepix content to clear a patient or a device for scanning.",
@@ -730,9 +782,110 @@ const trademarks: LegalDoc = {
   ],
 };
 
+/* ───────────── DMCA Copyright Notice ───────────── */
+
+const dmca: LegalDoc = {
+  slug: "dmca",
+  title: TITLE.dmca,
+  description: `How to report copyright infringement on Borepix under the Digital Millennium Copyright Act, how counter-notices work, and how to reach the ${legalEntity} copyright agent at ${legalEmail}.`,
+  summary: [
+    `${legalEntity} respects the intellectual property of others and expects the same of everyone who uses the Service.`,
+    `To report material that infringes your copyright, email a complete DMCA notice to ${legalEmail}. We act on valid notices promptly.`,
+    "If your material was removed by mistake, you can send a counter-notice. Accounts that repeatedly infringe are terminated.",
+    "Knowingly misrepresenting that material infringes, or was removed by mistake, can make you liable for damages under 17 U.S.C. § 512(f).",
+  ],
+  sections: [
+    {
+      id: "policy",
+      heading: "Our copyright policy",
+      blocks: [
+        p(
+          `${legalEntity} responds to notices of alleged copyright infringement that comply with the Digital Millennium Copyright Act (DMCA), 17 U.S.C. § 512. This page explains how to send a notice, what happens next, and how to respond if your own material is removed.`,
+        ),
+        p(
+          "Borepix writes its own workbooks, questions, rationales and diagrams. If you believe that any content on the Service copies your work without permission, we want to know.",
+        ),
+      ],
+    },
+    {
+      id: "notice",
+      heading: "How to send a takedown notice",
+      blocks: [
+        p(`Send your notice by email to ${legalEmail} with the subject line "DMCA notice". To be effective under the DMCA, the notice must include:`),
+        list(
+          "Identification of the copyrighted work you claim has been infringed, or a representative list if several works are covered by one notice.",
+          "Identification of the material you claim is infringing, with enough detail for us to find it, including the full page address (URL) and, where relevant, the question, module or image.",
+          "Your name, mailing address, telephone number and email address.",
+          "A statement that you have a good-faith belief that use of the material in the manner complained of is not authorized by the copyright owner, its agent or the law.",
+          "A statement, made under penalty of perjury, that the information in the notice is accurate and that you are the copyright owner or are authorized to act on the owner's behalf.",
+          "Your physical or electronic signature.",
+        ),
+        note(
+          "A notice that leaves out required elements may not be acted on. We may send a copy of your notice, including your contact information, to the person who posted the material.",
+        ),
+      ],
+    },
+    {
+      id: "agent",
+      heading: "Designated copyright agent",
+      blocks: [
+        p(`DMCA Agent, ${legalEntity}. Email: ${legalEmail}. Please use this address only for copyright matters; account and billing questions go to ${site.supportEmail}.`),
+      ],
+    },
+    {
+      id: "response",
+      heading: "What happens after a notice",
+      blocks: [
+        list(
+          "We review the notice and, if it is complete, remove or disable access to the material promptly.",
+          "We notify the person who posted the material, where one exists, and give them the chance to send a counter-notice.",
+          "We keep a record of the notice and the action taken.",
+        ),
+      ],
+    },
+    {
+      id: "counter-notice",
+      heading: "Counter-notices",
+      blocks: [
+        p(
+          `If material you posted was removed and you believe the removal was a mistake or misidentification, you may send a counter-notice to ${legalEmail} with the subject line "DMCA counter-notice". It must include:`,
+        ),
+        list(
+          "Identification of the material that was removed and the address where it appeared before removal.",
+          "A statement, under penalty of perjury, that you have a good-faith belief the material was removed as a result of mistake or misidentification.",
+          "Your name, mailing address, telephone number and email address.",
+          "A statement that you consent to the jurisdiction of the federal district court for the judicial district in which your address is located, or, if you are outside the United States, any judicial district in which Borepix may be found, and that you will accept service of process from the person who sent the original notice or their agent.",
+          "Your physical or electronic signature.",
+        ),
+        p(
+          "On receipt of a valid counter-notice we forward it to the original complainant. Unless the complainant tells us within 10 business days that they have filed a court action seeking to restrain the material, we may restore it within 10 to 14 business days of receiving the counter-notice.",
+        ),
+      ],
+    },
+    {
+      id: "repeat-infringers",
+      heading: "Repeat infringers",
+      blocks: [
+        p(
+          "Borepix terminates the accounts and voids the license keys of users who are repeat infringers, and may do so after a single serious incident.",
+        ),
+      ],
+    },
+    {
+      id: "misrepresentation",
+      heading: "False claims",
+      blocks: [
+        p(
+          "Under 17 U.S.C. § 512(f), anyone who knowingly and materially misrepresents that material is infringing, or that it was removed by mistake, may be liable for damages, including costs and attorneys' fees. Consider whether a use is fair use, licensed or otherwise authorized before sending a notice.",
+        ),
+      ],
+    },
+  ],
+};
+
 /* ───────────── exports ───────────── */
 
-export const legalDocs: Record<LegalSlug, LegalDoc> = { terms, privacy, refunds, disclaimer, trademarks };
+export const legalDocs: Record<LegalSlug, LegalDoc> = { terms, privacy, refunds, disclaimer, trademarks, dmca };
 
 /** Documents in the order of `legalPages` in site.ts. */
 export const legalDocList: LegalDoc[] = legalPages.map((page) => legalDocs[page.slug]);

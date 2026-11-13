@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { PAYOUT_METHOD_LABEL, type PayoutMethod } from "@/data/types";
 import { cn } from "@/lib/cn";
 import { formatPrice } from "@/lib/pricing";
+import { affiliateJoinSchema, fieldErrors } from "@/lib/schemas";
 import { affiliateProgram, commerceEnabled, release, site } from "@/lib/site";
 import { affiliateStats, referralLink, useAffiliates, useCurrentAffiliate } from "@/lib/store/affiliates";
 import { useHydrated } from "@/lib/store/cart";
@@ -19,27 +20,14 @@ const inputClass =
 const labelClass = "block text-sm font-medium text-fg";
 const hintClass = "mt-1.5 text-xs text-muted";
 
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
 const PAYOUT_METHODS = Object.keys(PAYOUT_METHOD_LABEL) as PayoutMethod[];
 
 type Field = "firstName" | "lastName" | "email" | "payoutHandle";
 type Errors = Partial<Record<Field, string>>;
 
+/** Per-field messages from the shared join schema, keyed in form order so the first key is the one to focus. */
 function validate(values: Record<Field, string>, method: PayoutMethod): Errors {
-  const errors: Errors = {};
-  if (!values.firstName.trim()) errors.firstName = "Enter your first name.";
-  if (!values.lastName.trim()) errors.lastName = "Enter your last name.";
-  if (!EMAIL.test(values.email.trim())) errors.email = "Enter a valid email address.";
-  const handle = values.payoutHandle.trim();
-  if (!handle) {
-    errors.payoutHandle = method === "stripe" ? "Enter your Stripe account id." : "Enter your PayPal email.";
-  } else if (method === "stripe" && !/^acct_[A-Za-z0-9]{8,}$/.test(handle)) {
-    errors.payoutHandle = "Stripe account ids start with acct_ followed by letters and digits.";
-  } else if (method === "paypal" && !EMAIL.test(handle)) {
-    errors.payoutHandle = "Enter the email address on your PayPal account.";
-  }
-  return errors;
+  return fieldErrors<Field>(affiliateJoinSchema.safeParse({ ...values, payoutMethod: method }));
 }
 
 /** Inline field error: icon + text, announced as an alert, linked to its field through aria-describedby. */

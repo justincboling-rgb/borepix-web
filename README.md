@@ -29,9 +29,19 @@ Set `NEXT_PUBLIC_SITE_URL` (for example `https://www.borepix.com`) in production
 | `/faq`, `/about` | FAQ and About Us |
 | `/signup`, `/login` | Preview sign-up and sign-in (local only, see below) |
 | `/app/**` | Registry-prep web app: dashboard, practice, mock exams, MRI Mastery lessons and labs, flashcards, settings |
-| `/legal/[slug]` | Terms, privacy, refunds, educational disclaimer, trademarks |
+| `/terms`, `/privacy`, `/disclaimer`, `/dmca` | Terms of Service, Privacy Policy, Educational Disclaimer, DMCA Copyright Notice |
+| `/legal/[slug]` | Refund Policy and Trademark Notice |
 
 Store, workbook, quiz, NRTW and community data live in [`src/data`](src/data). The cart and checkout UI state is [`src/lib/store/cart.ts`](src/lib/store/cart.ts); orders, license keys and pledges are [`src/lib/store/orders.ts`](src/lib/store/orders.ts); both persist to `localStorage` and hydrate after mount via `StoreHydrator`. Learner progress for the web app is [`src/lib/store/progress.ts`](src/lib/store/progress.ts).
+
+## Security and legal
+
+- **Legal pages:** `/terms`, `/privacy`, `/disclaimer` and `/dmca` (plus `/legal/refunds` and `/legal/trademarks`). Content is in [`src/lib/content/legal.ts`](src/lib/content/legal.ts); old `/legal/terms`, `/legal/privacy` and `/legal/disclaimer` links redirect permanently. Copyright notices go to `legal@borepix.com`.
+- **Headers:** [`next.config.ts`](next.config.ts) sends `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, HSTS with preload, `Referrer-Policy: strict-origin-when-cross-origin`, a `Permissions-Policy`, and a baseline Content-Security-Policy on every response. Extend the CSP before adding any third-party script, font or analytics.
+- **Secrets:** only `NEXT_PUBLIC_SITE_URL` is exposed to the browser. `npm run build` runs [`scripts/check-env.mjs`](scripts/check-env.mjs) first and fails if a `NEXT_PUBLIC_` variable looks like a credential or a key literal is found in `src/`. Copy [`.env.example`](.env.example) to `.env.local`; everything matching `.env*` except the example is git-ignored.
+- **Admin gate:** [`src/proxy.ts`](src/proxy.ts) protects `/admin`. Set `ADMIN_ACCESS_KEY`, open `/admin?key=<value>` once, and a secure HTTP-only cookie keeps you signed in for 12 hours. Production fails closed when the key is unset.
+- **Sessions and validation:** future account sessions use the HTTP-only cookie helpers in [`src/lib/server/session-cookie.ts`](src/lib/server/session-cookie.ts), never browser storage. Every form parses its input with the Zod schemas in [`src/lib/schemas`](src/lib/schemas), which are also the contract for server actions and route handlers. Rate-limit presets and the CORS allowlist for those handlers are in [`src/lib/server`](src/lib/server).
+- **Specs and audit:** [`docs/security`](docs/security) holds the binding auth, OWASP, RLS, environment and threat-model standards plus the 36-point audit of 13 Nov 2026; [`CLAUDE.md`](CLAUDE.md) points AI sessions at them. Sign-up requires an unchecked-by-default consent to the Terms, Privacy Policy and Educational Disclaimer.
 
 ## Release mode
 

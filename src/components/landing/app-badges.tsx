@@ -5,12 +5,10 @@ import { flushSync } from "react-dom";
 import { Bell, CircleAlert, CircleCheck, Play, Smartphone, X, type LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
+import { EMAIL_MAX_LENGTH, firstIssueMessage, waitlistEmailSchema } from "@/lib/schemas";
 import { site } from "@/lib/site";
 
 const STORAGE_KEY = "borepix:app-waitlist";
-const MAX_EMAIL_LENGTH = 254;
-/** Deliberately permissive: one "@", no spaces, a dot in the domain. The launch backend validates again. */
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type Platform = "ios" | "android";
 
@@ -119,18 +117,13 @@ export function AppBadges({ className }: { className?: string }) {
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const email = value.trim();
-
-    if (!email) {
-      setForm({ status: "error", message: "Enter your email address." });
+    const parsed = waitlistEmailSchema.safeParse(value);
+    if (!parsed.success) {
+      setForm({ status: "error", message: firstIssueMessage(parsed) });
       inputRef.current?.focus();
       return;
     }
-    if (email.length > MAX_EMAIL_LENGTH || !EMAIL_PATTERN.test(email)) {
-      setForm({ status: "error", message: "Enter a valid email address, like name@example.com." });
-      inputRef.current?.focus();
-      return;
-    }
+    const email = parsed.data;
 
     try {
       window.localStorage.setItem(
@@ -237,7 +230,7 @@ export function AppBadges({ className }: { className?: string }) {
               autoCapitalize="none"
               spellCheck={false}
               placeholder="name@example.com"
-              maxLength={MAX_EMAIL_LENGTH}
+              maxLength={EMAIL_MAX_LENGTH}
               value={value}
               onChange={(e) => {
                 setValue(e.target.value);

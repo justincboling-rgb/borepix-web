@@ -6,6 +6,7 @@ import { flushSync } from "react-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
+import { EMAIL_MAX_LENGTH, firstIssueMessage, waitlistEmailSchema } from "@/lib/schemas";
 import { release } from "@/lib/site";
 
 /**
@@ -13,9 +14,6 @@ import { release } from "@/lib/site";
  * mailing list does not exist yet, so nothing leaves the browser; flush this key when the backend ships.
  */
 const STORAGE_KEY = "borepix:launch-waitlist";
-const MAX_EMAIL_LENGTH = 254;
-/** Deliberately permissive: one "@", no spaces, a dot in the domain. The launch backend validates again. */
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /* ───────────────────────── Badge ───────────────────────── */
 
@@ -98,18 +96,13 @@ export function LaunchNotify({ productSlug, compact = false, className }: Notify
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const email = value.trim();
-
-    if (!email) {
-      setForm({ status: "error", message: "Enter your email address." });
+    const parsed = waitlistEmailSchema.safeParse(value);
+    if (!parsed.success) {
+      setForm({ status: "error", message: firstIssueMessage(parsed) });
       inputRef.current?.focus();
       return;
     }
-    if (email.length > MAX_EMAIL_LENGTH || !EMAIL_PATTERN.test(email)) {
-      setForm({ status: "error", message: "Enter a valid email address, like name@example.com." });
-      inputRef.current?.focus();
-      return;
-    }
+    const email = parsed.data;
 
     try {
       window.localStorage.setItem(
@@ -194,7 +187,7 @@ export function LaunchNotify({ productSlug, compact = false, className }: Notify
                   autoCapitalize="none"
                   spellCheck={false}
                   placeholder="name@example.com"
-                  maxLength={MAX_EMAIL_LENGTH}
+                  maxLength={EMAIL_MAX_LENGTH}
                   value={value}
                   onChange={(e) => {
                     setValue(e.target.value);

@@ -148,20 +148,38 @@ export const plans: Plan[] = [
   },
 ];
 
+/**
+ * Legal documents and where each lives. The four core policies have clean root routes; the refund and
+ * trademark pages stay under /legal. Old /legal/terms, /legal/privacy and /legal/disclaimer URLs redirect
+ * (see next.config.ts).
+ */
 export const legalPages = [
-  { slug: "terms", title: "Terms of Service" },
-  { slug: "privacy", title: "Privacy Policy" },
-  { slug: "refunds", title: "Refund Policy" },
-  { slug: "disclaimer", title: "Educational Disclaimer" },
-  { slug: "trademarks", title: "Trademark Notice" },
+  { slug: "terms", title: "Terms of Service", href: "/terms" },
+  { slug: "privacy", title: "Privacy Policy", href: "/privacy" },
+  { slug: "refunds", title: "Refund Policy", href: "/legal/refunds" },
+  { slug: "disclaimer", title: "Educational Disclaimer", href: "/disclaimer" },
+  { slug: "trademarks", title: "Trademark Notice", href: "/legal/trademarks" },
+  { slug: "dmca", title: "DMCA Copyright Notice", href: "/dmca" },
 ] as const;
 
 export type LegalSlug = (typeof legalPages)[number]["slug"];
 
-/** The three legal links the footer prints, in order. */
+/** Canonical path of a legal document. */
+export function legalHref(slug: LegalSlug): string {
+  const page = legalPages.find((p) => p.slug === slug);
+  return page ? page.href : `/legal/${slug}`;
+}
+
+/** Legal entity named in the Terms and copyright notices. */
+export const legalEntity = "Borepix LLC";
+
+/** Copyright and DMCA correspondence. Separate from support so takedown notices reach the right inbox. */
+export const legalEmail = "legal@borepix.com";
+
+/** The three legal links the footer prints first, in order. */
 export const footerLegalLinks: NavLink[] = [
-  { label: "Privacy Policies", href: "/legal/privacy" },
-  { label: "Terms of Service", href: "/legal/terms" },
+  { label: "Privacy Policies", href: "/privacy" },
+  { label: "Terms of Service", href: "/terms" },
   { label: "Contact", href: `mailto:${site.supportEmail}` },
 ];
 

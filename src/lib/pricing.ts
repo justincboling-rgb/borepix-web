@@ -1,4 +1,5 @@
 import { getNrtwStatus, nrtw } from "@/data/nrtw";
+import { firstIssueMessage, promoCodeSchema } from "@/lib/schemas";
 
 /** "$49.99", "$199.00". Always two decimals so totals line up. */
 export function formatPrice(amount: number): string {
@@ -14,18 +15,13 @@ export type PromoResult =
   | { ok: true; code: string; percent: number; description: string }
   | { ok: false; reason: string };
 
-export function normalizePromo(code: string): string {
-  return code.trim().toUpperCase().replace(/\s+/g, "");
-}
-
 /**
- * Validate a promo code against the current date and the promo-eligible subtotal.
- * Only NRTW2026 exists today; add codes here, not in components.
+ * Validate a promo code against the current date and the promo-eligible subtotal. The code itself is
+ * normalised and matched by `promoCodeSchema` (`@/lib/schemas`), which is where new codes are added.
  */
 export function validatePromo(code: string, now: Date, eligibleSubtotal: number): PromoResult {
-  const normalized = normalizePromo(code);
-  if (!normalized) return { ok: false, reason: "Enter a promo code." };
-  if (normalized !== nrtw.code) return { ok: false, reason: "That code is not recognised." };
+  const parsed = promoCodeSchema.safeParse(code);
+  if (!parsed.success) return { ok: false, reason: firstIssueMessage(parsed) };
   const status = getNrtwStatus(now);
   if (status.phase === "ended") return { ok: false, reason: `${nrtw.code} ended on November 14, 2026.` };
   if (!status.promoActive) return { ok: false, reason: `${nrtw.code} activates on November 1, 2026.` };

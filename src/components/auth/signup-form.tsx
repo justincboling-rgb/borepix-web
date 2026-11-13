@@ -6,6 +6,7 @@ import { useId, useState, type FormEvent } from "react";
 import { flushSync } from "react-dom";
 import { ArrowRight, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { TERMS_MESSAGE } from "@/lib/schemas";
 import { setProfile, useHydrated, useProgress } from "@/lib/store/progress";
 import { phoneCountry, toE164 } from "./countries";
 import { FieldError, TextField } from "./field";
@@ -80,7 +81,7 @@ export function SignupForm() {
       phone: validatePhone(phoneNational, country.dial),
       postalCode: validatePostalCode(postalCode),
       password: validateNewPassword(String(data.get("password") ?? "")),
-      terms: data.get("terms") ? undefined : "Agree to the Terms of Service and Privacy Policy to continue.",
+      terms: data.get("terms") ? undefined : TERMS_MESSAGE,
     };
     const next: Errors = {};
     for (const field of FIELD_ORDER) {
@@ -194,12 +195,16 @@ export function SignupForm() {
             />
             <label htmlFor={id("terms")} className="text-sm leading-relaxed text-muted">
               I agree to the{" "}
-              <Link href="/legal/terms" className="font-medium text-blush underline underline-offset-4">
+              <Link href="/terms" className="font-medium text-blush underline underline-offset-4">
                 Terms of Service
+              </Link>
+              ,{" "}
+              <Link href="/privacy" className="font-medium text-blush underline underline-offset-4">
+                Privacy Policy
               </Link>{" "}
               and{" "}
-              <Link href="/legal/privacy" className="font-medium text-blush underline underline-offset-4">
-                Privacy Policy
+              <Link href="/disclaimer" className="font-medium text-blush underline underline-offset-4">
+                Educational Disclaimer
               </Link>
               .
             </label>

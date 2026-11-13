@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 const related = [
   { href: "/legal/refunds", title: "Refund Policy", description: "Keys are refundable until their first submission." },
-  { href: "/legal/terms", title: "Terms of Service", description: "What you agree to when you buy a key or a pass." },
+  { href: "/terms", title: "Terms of Service", description: "What you agree to when you buy a key or a pass." },
   { href: "/store", title: "Store", description: "Test keys, the Complete Suite, the CE Library pass and the app." },
   { href: "/about", title: "About Borepix", description: "Built in Kearny by technologists working across MR, IR and CT." },
 ] as const;

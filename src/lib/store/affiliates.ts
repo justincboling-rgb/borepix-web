@@ -13,7 +13,10 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import type { Affiliate, Order, Payout, PayoutMethod } from "@/data/types";
 import { generateId } from "@/lib/keys";
 import { cents } from "@/lib/pricing";
+import { referralCodeSchema } from "@/lib/schemas";
 import { affiliateProgram } from "@/lib/site";
+
+export { normalizeReferralCode } from "@/lib/schemas";
 
 export type Referral = { code: string; capturedAt: number };
 
@@ -42,12 +45,7 @@ type AffiliatesState = {
   clearAll: () => void;
 };
 
-const CODE_PATTERN = /^[A-Z0-9]{4,16}$/;
 const DAY = 86_400_000;
-
-export function normalizeReferralCode(raw: string): string {
-  return raw.trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
-}
 
 function baseCode(firstName: string, createdAt: number): string {
   const name = firstName.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 8);
@@ -104,9 +102,9 @@ export const useAffiliates = create<AffiliatesState>()(
       signOut: () => set({ currentAffiliateId: null }),
 
       captureReferral: (code) => {
-        const normalized = normalizeReferralCode(code);
-        if (!CODE_PATTERN.test(normalized)) return;
-        set({ referral: { code: normalized, capturedAt: Date.now() } });
+        const parsed = referralCodeSchema.safeParse(code);
+        if (!parsed.success) return;
+        set({ referral: { code: parsed.data, capturedAt: Date.now() } });
       },
 
       recordPayout: (affiliateId, amount) => {

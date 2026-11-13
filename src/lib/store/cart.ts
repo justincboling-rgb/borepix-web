@@ -15,7 +15,8 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { getProductById } from "@/data/products";
 import type { Product } from "@/data/types";
 import { useNow } from "@/lib/hooks/use-now";
-import { computeTotals, normalizePromo, validatePromo, type PromoResult, type Totals } from "@/lib/pricing";
+import { computeTotals, validatePromo, type PromoResult, type Totals } from "@/lib/pricing";
+import { normalizePromo } from "@/lib/schemas";
 import { commerceEnabled } from "@/lib/site";
 
 /** Stable stand-in for "now" before hydration, when the cart is still empty. Never `new Date()` in render. */

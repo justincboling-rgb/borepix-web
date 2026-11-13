@@ -8,6 +8,7 @@ import { community } from "@/data/community";
 import type { Pledge } from "@/data/types";
 import { cn } from "@/lib/cn";
 import { formatPrice } from "@/lib/pricing";
+import { firstIssueMessage, inKindPledgeSchema, moneyPledgeSchema } from "@/lib/schemas";
 import { commerceEnabled } from "@/lib/site";
 import { pledgeSummary, useOrders } from "@/lib/store/orders";
 
@@ -143,19 +144,21 @@ export function PledgeWidget() {
     e.preventDefault();
     let pledge: Pledge;
     if (commerceEnabled) {
-      if (amount === null) {
-        setError("Enter a whole-dollar amount of at least $1, or choose a tier.");
+      const parsed = moneyPledgeSchema.safeParse({ kind: "money", amount, cadence, name });
+      if (!parsed.success) {
+        setError(firstIssueMessage(parsed));
         customRef.current?.focus();
         return;
       }
-      pledge = addPledge(amount, cadence, name.trim() || null);
+      pledge = addPledge(parsed.data.amount, parsed.data.cadence, parsed.data.name);
     } else {
-      if (items.length === 0) {
-        setError("Choose at least one item to pledge.");
+      const parsed = inKindPledgeSchema.safeParse({ kind: "in-kind", items, cadence, name });
+      if (!parsed.success) {
+        setError(firstIssueMessage(parsed));
         firstItemRef.current?.focus();
         return;
       }
-      pledge = addPledge(0, cadence, name.trim() || null, items);
+      pledge = addPledge(0, parsed.data.cadence, parsed.data.name, parsed.data.items);
     }
     // Render the success view synchronously so focus can move to it in the same event.
     flushSync(() => {

@@ -11,8 +11,9 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { getProductById } from "@/data/products";
 import type { CardBrand, Order, OrderItem, Pledge, RedeemedKey } from "@/data/types";
-import { generateId, generateLicenseKey, generateOrderNumber, isLicenseKeyFormat, normalizeLicenseKey } from "@/lib/keys";
+import { generateId, generateLicenseKey, generateOrderNumber } from "@/lib/keys";
 import type { Totals } from "@/lib/pricing";
+import { firstIssueMessage, licenseKeySchema } from "@/lib/schemas";
 import { activeReferralCode, useAffiliates } from "./affiliates";
 import type { ResolvedLine } from "./cart";
 
@@ -83,10 +84,9 @@ export const useOrders = create<OrdersState>()(
       },
 
       redeemKey: (raw) => {
-        const key = normalizeLicenseKey(raw);
-        if (!isLicenseKeyFormat(key)) {
-          return { ok: false, reason: "Keys look like BPX-MRI-XXXX-XXXX-XXXX. Check the format and try again." };
-        }
+        const parsed = licenseKeySchema.safeParse(raw);
+        if (!parsed.success) return { ok: false, reason: firstIssueMessage(parsed) };
+        const key = parsed.data;
         const { orders, redeemed } = get();
         const owner = orders.flatMap((o) => o.items).find((item) => item.keys.includes(key));
         if (!owner) {

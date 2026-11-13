@@ -153,3 +153,14 @@ has not exported, build it locally in your own files rather than editing theirs.
 ## 8. Accessibility (must pass)
 
 Contrast ≥ 4.5:1 with the token table; keyboard reachable; Escape closes overlays; `aria-live="polite"` for cart and quiz status changes; forms have visible labels, `autocomplete`, inline errors linked by `aria-describedby`; correct / incorrect states use color + icon + text.
+
+## 9. Security and legal hardening (Nov 2026)
+
+- **Legal routes.** `/terms`, `/privacy`, `/disclaimer` and `/dmca` are the canonical policies (`src/app/(marketing)/<slug>/page.tsx` → `LegalPage`); `/legal/refunds` and `/legal/trademarks` stay under `/legal`. Content lives in `src/lib/content/legal.ts`; paths in `legalPages` (`legalHref(slug)`); the renderer is `src/components/legal/legal-document.tsx`. Old `/legal/terms|privacy|disclaimer` URLs redirect permanently (`next.config.ts`). Copyright and DMCA mail goes to `legalEmail`; the entity is `legalEntity` ("Borepix LLC").
+- **Headers.** `next.config.ts` sets X-Frame-Options DENY, nosniff, HSTS (2 years, preload), Referrer-Policy, Permissions-Policy and a baseline CSP (self-hosted scripts/styles/fonts; `data:`/`blob:` images and workers for the dome; no framing; dev adds `unsafe-eval` and WebSockets for HMR). Adding a third-party script or font means extending the CSP first.
+- **Secrets.** Only `NEXT_PUBLIC_SITE_URL` may reach the browser. `npm run build` runs `scripts/check-env.mjs` first and fails on secret-looking `NEXT_PUBLIC_` names or credential literals in `src/`. `.env.example` documents every variable.
+- **Sessions.** `/admin` is gated by `src/proxy.ts`: `ADMIN_ACCESS_KEY` (server-only) is exchanged once for an HTTP-only, Secure, SameSite cookie; production fails closed without the key. Future account sessions use `src/lib/server/session-cookie.ts` (HTTP-only `borepix_session`), never localStorage.
+- **Validation.** Every form parses its input with the Zod schemas in `src/lib/schemas/`; the same schemas are the contract for server actions and route handlers when the backend lands.
+- **Clickwrap.** The sign-up checkbox (`src/components/auth/signup-form.tsx`) is unchecked by default and required; its label names the Terms of Service, Privacy Policy and Educational Disclaimer, and the error copy is `TERMS_MESSAGE` from `src/lib/schemas/auth.ts`.
+- **Errors.** `src/app/error.tsx` is the generic route error boundary (message plus Next.js digest; no stack traces reach the browser).
+- **Specs.** `docs/security/` (`auth.md`, `security.md`, `RLS-policies.md`, `env.md`, `threat-model.md`, `audit-2026-11-13.md`) is binding for every backend addition; `CLAUDE.md` at the project root tells AI sessions to read it first. Server helpers for the backend live in `src/lib/server/` (session cookie, rate limit, CORS allowlist).

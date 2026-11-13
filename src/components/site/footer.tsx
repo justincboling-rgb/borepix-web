@@ -27,12 +27,10 @@ const program: NavLink[] = [
   { label: "Rad Tech Week", href: "/#rad-tech-week" },
 ];
 
-/** The three contractual legal links first, then every other legal page not already listed. */
+/** The three contractual legal links first, then every other legal page not already listed (refunds, disclaimer, trademarks, DMCA). */
 const legal: NavLink[] = [
   ...footerLegalLinks,
-  ...legalPages
-    .filter((p) => !footerLegalLinks.some((l) => l.href === `/legal/${p.slug}`))
-    .map((p) => ({ label: p.title, href: `/legal/${p.slug}` })),
+  ...legalPages.filter((p) => !footerLegalLinks.some((l) => l.href === p.href)).map((p) => ({ label: p.title, href: p.href })),
 ];
 
 const columns = [

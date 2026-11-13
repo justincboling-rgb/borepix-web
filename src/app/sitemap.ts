@@ -30,6 +30,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...products.map((p) => entry(`/store/${p.slug}`, 0.8, "weekly")),
     ...WORKBOOK_SLUGS.map((slug) => entry(`/anatomy/${slug}`, 0.7, "monthly")),
     ...QUIZ_CATEGORIES.map((slug) => entry(`/quizzes/${slug}`, 0.7, "monthly")),
-    ...legalPages.map((page) => entry(`/legal/${page.slug}`, 0.3, "yearly")),
+    ...legalPages.map((page) => entry(page.href, 0.3, "yearly")),
   ];
 }

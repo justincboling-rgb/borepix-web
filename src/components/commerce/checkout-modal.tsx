@@ -11,17 +11,9 @@ import { ProductArt } from "@/components/store/product-art";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import type { CardBrand, Order } from "@/data/types";
-import {
-  CARD_BRAND_LABEL,
-  cvcValid,
-  detectCardBrand,
-  digitsOnly,
-  expiryValid,
-  formatCardNumber,
-  formatExpiry,
-  luhnValid,
-} from "@/lib/keys";
+import { CARD_BRAND_LABEL, detectCardBrand, digitsOnly, formatCardNumber, formatExpiry } from "@/lib/keys";
 import { formatPrice, type Totals } from "@/lib/pricing";
+import { checkoutFieldMessage, type CheckoutCountryCode } from "@/lib/schemas";
 import { commerceEnabled } from "@/lib/site";
 import { totalsFor, useCart, useCheckoutLines, usePricingClock, type ResolvedLine } from "@/lib/store/cart";
 import { useOrders } from "@/lib/store/orders";
@@ -181,6 +173,7 @@ function OrderSummary({ lines, totals }: { lines: ResolvedLine[]; totals: Totals
 
 /* ───────────────────────── Card form ───────────────────────── */
 
+/** Display names and postal-field labels for the codes the checkout schema accepts (`CHECKOUT_COUNTRY_CODES`). */
 const COUNTRIES = [
   { code: "US", name: "United States", postal: "ZIP code" },
   { code: "CA", name: "Canada", postal: "Postal code" },
@@ -188,7 +181,7 @@ const COUNTRIES = [
   { code: "AU", name: "Australia", postal: "Postcode" },
   { code: "IE", name: "Ireland", postal: "Eircode" },
   { code: "NZ", name: "New Zealand", postal: "Postcode" },
-] as const;
+] as const satisfies readonly { code: CheckoutCountryCode; name: string; postal: string }[];
 
 type CountryCode = (typeof COUNTRIES)[number]["code"];
 
@@ -215,47 +208,9 @@ const FIELD_ORDER: Field[] = ["email", "name", "card", "expiry", "cvc", "country
 
 const INITIAL_VALUES: Values = { email: "", name: "", card: "", expiry: "", cvc: "", country: "US", postal: "" };
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const US_ZIP_PATTERN = /^\d{5}(-\d{4})?$/;
-
+/** One field's message from the shared checkout schema, so the modal and the server apply the same rules. */
 function validateField(field: Field, values: Values, now: Date): string | undefined {
-  switch (field) {
-    case "email": {
-      const email = values.email.trim();
-      if (!email) return "Enter the email address your keys should go to.";
-      return EMAIL_PATTERN.test(email) ? undefined : "Enter a valid email address.";
-    }
-    case "name":
-      return values.name.trim().length >= 2 ? undefined : "Enter the name as it appears on the card.";
-    case "card": {
-      const digits = digitsOnly(values.card);
-      if (!digits) return "Enter your card number.";
-      const expected = detectCardBrand(digits) === "amex" ? 15 : 16;
-      if (digits.length < expected) return "Enter the full card number.";
-      return luhnValid(digits) ? undefined : "That card number is not valid. Check the digits and try again.";
-    }
-    case "expiry": {
-      const digits = digitsOnly(values.expiry);
-      if (digits.length !== 4) return "Enter the expiry date as MM/YY.";
-      const month = Number(digits.slice(0, 2));
-      if (month < 1 || month > 12) return "Enter a month from 01 to 12.";
-      if (2000 + Number(digits.slice(2)) > now.getFullYear() + 20) return "Enter a valid expiry year.";
-      return expiryValid(values.expiry, now) ? undefined : "This card has expired. Use a card that is still valid.";
-    }
-    case "cvc": {
-      const brand = detectCardBrand(values.card);
-      if (cvcValid(values.cvc, brand)) return undefined;
-      return brand === "amex"
-        ? "Enter the 4-digit code on the front of the card."
-        : "Enter the 3-digit code on the back of the card.";
-    }
-    case "country":
-      return undefined;
-    case "postal": {
-      if (values.country !== "US") return undefined;
-      return US_ZIP_PATTERN.test(values.postal.trim()) ? undefined : "Enter a 5-digit ZIP code.";
-    }
-  }
+  return checkoutFieldMessage(field, values, now);
 }
 
 /** True once every required field has something in it. Format checks happen on blur and submit. */
@@ -510,10 +465,10 @@ function CheckoutForm({ emailRef, total, processing, onPay }: FormProps) {
         Payments are encrypted and processed by Stripe
       </p>
       <p className="mt-2 flex items-center justify-center gap-4 font-mono text-xs text-muted">
-        <Link href="/legal/terms" className="transition-colors duration-150 hover:text-fg">
+        <Link href="/terms" className="transition-colors duration-150 hover:text-fg">
           Terms
         </Link>
-        <Link href="/legal/privacy" className="transition-colors duration-150 hover:text-fg">
+        <Link href="/privacy" className="transition-colors duration-150 hover:text-fg">
           Privacy
         </Link>
         <Link href="/legal/refunds" className="transition-colors duration-150 hover:text-fg">

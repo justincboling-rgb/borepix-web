@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { legalPages, type LegalSlug } from "@/lib/site";
+import { legalHref, legalPages, type LegalSlug } from "@/lib/site";
 
 export const legalLinkClass =
   "font-medium text-blush underline decoration-blush/40 underline-offset-4 transition-colors duration-150 hover:decoration-blush";
@@ -37,7 +37,7 @@ export function LegalText({ text, current }: { text: string; current: LegalSlug 
           return slug === current ? (
             part
           ) : (
-            <Link key={i} href={`/legal/${slug}`} className={legalLinkClass}>
+            <Link key={i} href={legalHref(slug)} className={legalLinkClass}>
               {part}
             </Link>
           );
